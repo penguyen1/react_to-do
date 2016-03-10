@@ -1,3 +1,4 @@
+require('dotenv').config();
 'use strict'
 const express     = require('express');
 const logger      = require('morgan');

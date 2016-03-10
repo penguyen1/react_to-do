@@ -2,7 +2,7 @@
 const express     = require('express');
 const tasks       = express.Router();
 const bodyParser  = require('body-parser');
-const db          = require('./../db/pgp');
+const db          = require('../db/pgp');
 
 var myTasks = {taskA:{
       name   : 'Jason',
@@ -13,29 +13,28 @@ var myTasks = {taskA:{
 
 // localhost:3000/tasks
 tasks.route('/')
-  .get((req,res)=>res.json(myTasks))
-  .post((req,res)=>{
-    // add task to db
-    console.log('/tasks post success!')
-  })
+  .get(db.getTasks, (req,res)=>res.send(res.rows))
+  .post(db.addTask, (req,res)=>res.send(res.rows))
 
 // localhost:3000/task-#####/time
 tasks.route('/:id/time')
-  .put((req,res)=>{
+  .put(db.updateTime, (req,res)=>{
     // update task time, if it exists
-    // if not, do nothing
-    console.log('/:id/time update success!')
+    // TODO: return actual task_id from db
+    res.send(req.params.taskid)
   })
 
 // localhost:3000/task-#####
 tasks.route('/:id')
-  .put((req,res)=>{
+  .put(db.toggleTask, (req,res)=>{
     // update specific task
-    console.log('/:id update success!')
+    // TODO: return actual task_id from db
+    res.send(req.params.taskid)
   })
-  .delete((req,res)=>{
+  .delete(db.deleteTask, (req,res)=>{
     // delete specific task
-    console.log('/:id delete success!')
+    // TODO: return actual task_id from db
+    res.send(req.params.taskid)
   })
 
 
