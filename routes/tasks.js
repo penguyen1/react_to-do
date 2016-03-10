@@ -4,33 +4,29 @@ const tasks       = express.Router();
 const bodyParser  = require('body-parser');
 const db          = require('../db/pgp');
 
-const db = require('../db/pg');
 
 // /tasks
 tasks.route('/')
+  // get all tasks
   .get( db.getTasks, (req,res)=>res.json(res.rows))
+  // add a task 
   .post( db.addTask, (req,res)=>res.json(res.rows))
 
 // /tasks/task-12345/time
 tasks.route('/:taskID/time')
+  // update a task's time, if it exists
   .put( db.updateTime, (req,res)=>{
-    // update a task's time, if it exists
-    // if not, do nothing.
-
-    //todo: return the actual id from the db, instead of just echoing here
     res.send(req.params.taskid)
   })
 
 // /tasks/task-12345
 tasks.route('/:taskID')
+  // update a specific task
   .put( db.toggleTask, (req,res)=>{
-    // update a specific task
-    //todo: return the actual id from the db, instead of just echoing here
     res.send(req.params.taskid)
   })
+  // delete a specific task   
   .delete(db.deleteTask, (req,res)=>{
-    // delete a specific task
-    //todo: return the actual id from the db, instead of just echoing here
     res.send(req.params.taskid)
   })
 

@@ -8,26 +8,28 @@ const App = React.createClass({
   componentDidMount:function() {
    // this is where you'll get the data from the 'db'
    $.get('/tasks').done( (data)=>{
-      this.state.tasks=data;
-      this.setState({tasks:this.state.tasks})
+      data.forEach((el)=>{
+        this.state.tasks[el.task_id] = el
+      })
+      this.setState({tasks: this.state.tasks})
     })
   },
   addTask:function( newTask ) {
-    // generate a new timestamp so that we have a unique id for each task
-    var timestamp = (new Date()).getTime();
+    var that = this
 
-    // add new task to state
-    this.state.tasks['task-'+ timestamp] = newTask;
-
-    this.setState({ tasks: this.state.tasks });
+    $.post('/tasks', newTask)
+     .done((data)=>{
+        var newID = data.task_id;
+        // add new task to state
+        that.state.tasks[newID] = newTask;
+        that.setState({ tasks: that.state.tasks });
+     }.bind(this));
 
   },
   toggleTask:function(key){
     this.state.tasks[key].completed = !this.state.tasks[key].completed;
     this.setState({tasks:this.state.tasks});
   },
-
-
   filterComplete:function(key){
     return this.state.tasks[key].completed
   },
@@ -92,15 +94,11 @@ const CreateTaskForm = React.createClass({
     var task = {
       name : this.refs.name.value,
       completed:false,
-      desc: this.refs.desc.value
+      desc: this.refs.desc.value,
+      start_time: 
     }
-
-    // add the task to the state
-    this.props.addTask(task);
-    
-    // clear the form
-    this.refs.taskForm.reset();
-
+    this.props.addTask(task);     // add the task to the state
+    this.refs.taskForm.reset();   // clear the form
   },
   render:function() {
     return (
@@ -138,7 +136,7 @@ const Task = React.createClass({
     return (
       <li className="collection-item">
         <div>
-          <strong>{this.props.details.name}</strong> {this.props.details.desc}
+          <strong>{this.props.details.task_name}</strong> {this.props.details.task_desc}
           <a href="#" onClick={this.handleClick} className="secondary-content">
             <i className="material-icons">check</i>
           </a>
