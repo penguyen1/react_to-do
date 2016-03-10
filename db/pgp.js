@@ -12,7 +12,7 @@ var db  = pgp(cn);
 
 function addTask(req,res,next){
   db.one(`INSERT INTO tasks(task_name, task_desc) VALUES($1,$2) RETURNING task_id;`,
-          [req.body.task_name, req.body.task_desc])
+          [req.body.name, req.body.desc])
     .then((data)=>{
       res.rows = data;
       next();
