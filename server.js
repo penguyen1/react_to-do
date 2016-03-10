@@ -21,10 +21,6 @@ app.use(express.static(path.join(__dirname,'public')))
 // set up some logging
 app.use(logger('dev'));
 
-// serve the index.html file statically
-app.get('/',(req,res)=>{
-  res.sendFile('index.html')
-})
 
 // turn me on!
 app.use('/tasks',taskRoutes);
